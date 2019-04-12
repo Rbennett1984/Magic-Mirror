@@ -1,6 +1,6 @@
 # smartmirror.py
 # requirements
-# requests, feedparser, traceback, Pillow
+# requests traceback, Pillow
 
 from Tkinter import *
 import locale
@@ -9,7 +9,7 @@ import time
 import requests
 import json
 import traceback
-import feedparser
+
 
 from PIL import Image, ImageTk
 from contextlib import contextmanager
@@ -20,15 +20,16 @@ ui_locale = '' # e.g. 'fr_FR' fro French, '' as default
 time_format = 12 # 12 or 24
 date_format = "%b %d, %Y" # check python doc for strftime() for options
 news_country_code = 'us'
-weather_api_token = '<TOKEN>' # create account at https://darksky.net/dev/
+weather_api_token = '7b8b41ea2377172e89b39e8d93b5c1e3'
+ # create account at https://darksky.net/dev/
 weather_lang = 'en' # see https://darksky.net/dev/docs/forecast for full list of language parameters values
 weather_unit = 'us' # see https://darksky.net/dev/docs/forecast for full list of unit parameters values
-latitude = None # Set this if IP location lookup does not work for you (must be a string)
-longitude = None # Set this if IP location lookup does not work for you (must be a string)
-xlarge_text_size = 94
-large_text_size = 48
-medium_text_size = 28
-small_text_size = 18
+latitude = 29.6456 # Set this if IP location lookup does not work for you (must be a string)
+longitude =  -82.4033 # Set this if IP location lookup does not work for you (must be a string)
+xlarge_text_size = 64
+large_text_size = 44
+medium_text_size = 22
+small_text_size = 10
 
 @contextmanager
 def setlocale(name): #thread proof function to work with locale
@@ -67,11 +68,11 @@ class Clock(Frame):
         self.timeLbl.pack(side=TOP, anchor=E)
         # initialize day of week
         self.day_of_week1 = ''
-        self.dayOWLbl = Label(self, text=self.day_of_week1, font=('Helvetica', small_text_size), fg="white", bg="black")
+        self.dayOWLbl = Label(self, text=self.day_of_week1, font=('Helvetica', medium_text_size), fg="white", bg="black")
         self.dayOWLbl.pack(side=TOP, anchor=E)
         # initialize date label
         self.date1 = ''
-        self.dateLbl = Label(self, text=self.date1, font=('Helvetica', small_text_size), fg="white", bg="black")
+        self.dateLbl = Label(self, text=self.date1, font=('Helvetica', medium_text_size), fg="white", bg="black")
         self.dateLbl.pack(side=TOP, anchor=E)
         self.tick()
 
@@ -113,7 +114,7 @@ class Weather(Frame):
         self.temperatureLbl = Label(self.degreeFrm, font=('Helvetica', xlarge_text_size), fg="white", bg="black")
         self.temperatureLbl.pack(side=LEFT, anchor=N)
         self.iconLbl = Label(self.degreeFrm, bg="black")
-        self.iconLbl.pack(side=LEFT, anchor=N, padx=20)
+        self.iconLbl.pack(side=LEFT, anchor=N, padx=10)
         self.currentlyLbl = Label(self, font=('Helvetica', medium_text_size), fg="white", bg="black")
         self.currentlyLbl.pack(side=TOP, anchor=W)
         self.forecastLbl = Label(self, font=('Helvetica', small_text_size), fg="white", bg="black")
@@ -208,7 +209,7 @@ class Weather(Frame):
         return 1.8 * (kelvin_temp - 273) + 32
 
 
-class News(Frame):
+class News (Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, *args, **kwargs)
         self.config(bg='black')
@@ -328,3 +329,44 @@ class FullscreenWindow:
 if __name__ == '__main__':
     w = FullscreenWindow()
     w.tk.mainloop()
+    
+
+
+import feedparser
+ 
+# Function to fetch the rss feed and return the parsed RSS
+def parseRSS( rss_url ):
+    return feedparser.parse( rss_url ) 
+    
+# Function grabs the rss feed headlines (titles) and returns them as a list
+def getHeadlines( rss_url ):
+    headlines = []
+    
+    feed = parseRSS( rss_url )
+    for newsitem in feed['items']:
+        headlines.append(newsitem['title'])
+    
+    return headlines
+ 
+# A list to hold all headlines
+allheadlines = []
+ 
+# List of RSS feeds that we will fetch and combine
+newsurls = {
+    'apnews':           'http://hosted2.ap.org/atom/APDEFAULT/3d281c11a96b4ad082fe88aa0db04305',
+    'googlenews':       'https://news.google.com/news/rss/?hl=en&amp;ned=us&amp;gl=US',
+    'yahoonews':        'http://news.yahoo.com/rss/'
+}
+ 
+# Iterate over the feed urls
+for key,url in newsurls.items():
+    # Call getHeadlines() and combine the returned headlines with allheadlines
+    allheadlines.extend( getHeadlines( url ) )
+ 
+ 
+# Iterate over the allheadlines list and print each headline
+for hl in allheadlines:
+    print(hl)
+ 
+ 
+# end of code 
