@@ -368,5 +368,19 @@ for key,url in newsurls.items():
 for hl in allheadlines:
     print(hl)
  
- 
+ # Get request for CDC COVID-19 Deaths API
+#import requests
+
+#url = "https://www.cdc.gov/coronavirus/2019-ncov/cases-updates/cases-in-us.html
+#"
+
+##payload = {}
+#headers = {
+ # 'Cookie': 'TS0196e5be=012409b3531b076c3f6b30fb3d6673f916f5e97d09fcf61faa249898fc029fac622d89eef7b40595d900f07ea86d11d3a0bc739d54'
+#}
+
+#response = requests.request("GET", url, headers=headers, data = payload)
+
+#print(response.text.encode('utf8'))
+
 # end of code 
